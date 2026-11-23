@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vitrine de itens, gestão de produtos e cadastro da equipe.">
+  <title>Núcleo — Loja & Equipe</title>
+  <link rel="stylesheet" href="Index.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <nav class="site-tabs" role="tablist" aria-label="Seções">
+        <button class="tab-button" id="catalog-tab" type="button" role="tab" aria-selected="true" aria-controls="catalog-panel" tabindex="0">Produtos</button>
+        <button class="tab-button" id="registrations-tab" type="button" role="tab" aria-selected="false" aria-controls="registrations-panel" tabindex="-1">Administrar</button>
+      </nav>
+    </div>
+  </header>
+
+  <svg class="icon-definitions" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="illustration-shirt" viewBox="0 0 64 64">
+      <path d="m22 11 10-5 10 5 12 7-6 13-7-4v28H23V27l-7 4-6-13 12-7Z" />
+      <path d="m23 12 9 7 9-7" />
+    </symbol>
+    <symbol id="illustration-mug" viewBox="0 0 64 64">
+      <path d="M13 18h31v25a8 8 0 0 1-8 8H21a8 8 0 0 1-8-8V18Z" />
+      <path d="M44 24h5a7 7 0 0 1 0 14h-5M20 11v4m9-4v4m9-4v4" />
+    </symbol>
+    <symbol id="illustration-notebook" viewBox="0 0 64 64">
+      <path d="M17 9h34v46H17a5 5 0 0 1-5-5V14a5 5 0 0 1 5-5Z" />
+      <path d="M21 9v46m9-34h13m-13 9h13m-13 9h13" />
+    </symbol>
+    <symbol id="illustration-bottle" viewBox="0 0 64 64">
+      <path d="M25 8h14v8l5 5v32a5 5 0 0 1-5 5H25a5 5 0 0 1-5-5V21l5-5V8Z" />
+      <path d="M25 13h14m-19 18h24" />
+    </symbol>
+    <symbol id="illustration-tote" viewBox="0 0 64 64">
+      <path d="M13 25h38l-3 29H16l-3-29Z" />
+      <path d="M22 25v-8a10 10 0 0 1 20 0v8" />
+    </symbol>
+    <symbol id="illustration-case" viewBox="0 0 64 64">
+      <path d="M10 24a6 6 0 0 1 6-6h32a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6V24Z" />
+      <path d="M10 29h44m-27-5v5" />
+    </symbol>
+    <symbol id="illustration-cap" viewBox="0 0 64 64">
+      <path d="M10 38a22 22 0 0 1 44 0H10Z" />
+      <path d="M10 38c8 0 15 7 27 7 8 0 13-3 17-7" />
+    </symbol>
+    <symbol id="illustration-keyring" viewBox="0 0 64 64">
+      <circle cx="24" cy="24" r="13" />
+      <circle cx="24" cy="24" r="5" />
+      <path d="m34 34 17 17m-4-4 5-5m-10 0 5-5" />
+    </symbol>
+    <symbol id="illustration-calendar" viewBox="0 0 64 64">
+      <rect x="10" y="14" width="44" height="40" rx="5" />
+      <path d="M10 25h44M21 9v10m22-10v10M20 34h5m8 0h5m8 0h2m-28 9h5m8 0h5" />
+    </symbol>
+    <symbol id="illustration-backpack" viewBox="0 0 64 64">
+      <path d="M18 22a14 14 0 0 1 28 0v29a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V22Z" />
+      <path d="M24 22v-3a8 8 0 0 1 16 0v3m-22 8h28v14H18m9-7h10" />
+    </symbol>
+    <symbol id="illustration-package" viewBox="0 0 64 64">
+      <path d="m10 20 22-11 22 11v25L32 56 10 45V20Z" />
+      <path d="m10 20 22 11 22-11M32 31v25m-11-42 22 11" />
+    </symbol>
+  </svg>
+
+  <main class="container" id="inicio">
+    <section class="intro" aria-labelledby="page-title">
+      <div class="intro-content">
+        <p class="eyebrow">A seleção de cada temporada</p>
+        <h1 id="page-title">A vitrine certa.</h1>
+        <p>Descubra itens para o cotidiano e mantenha as informações da loja organizadas em um só lugar.</p>
+        <button class="intro-link" id="show-catalog" type="button">Conhecer a coleção <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+    <p class="api-message" id="api-message" role="status" aria-live="polite" hidden></p>
+
+    <section class="tab-panel" id="catalog-panel" role="tabpanel" aria-labelledby="catalog-tab" tabindex="0">
+      <section class="section" id="catalogo" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Na prateleira</p>
+            <h2 id="catalog-title">Nossa coleção</h2>
+          </div>
+          <span class="item-count" id="product-count" aria-live="polite"></span>
+        </div>
+        <div class="product-grid" id="product-list"></div>
+        <p class="empty-state" id="product-empty" hidden>Ainda não há itens publicados.</p>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="registrations-panel" role="tabpanel" aria-labelledby="registrations-tab" tabindex="0" hidden>
+      <section class="section forms-section" aria-label="Cadastros">
+        <div class="form-card" id="cadastro-produto">
+          <p class="eyebrow">Novo item</p>
+          <h2>Incluir no estoque</h2>
+          <form id="product-form">
+            <label for="product-name">Nome</label>
+            <input id="product-name" name="name" type="text" maxlength="80" required>
+
+            <label for="product-price">Preço</label>
+            <div class="price-input">
+              <span aria-hidden="true">R$</span>
+              <input id="product-price" name="price" type="number" min="0.01" max="9999999.99" step="0.01" placeholder="0,00" required>
+            </div>
+
+            <label for="product-description">Descrição</label>
+            <textarea id="product-description" name="description" rows="3" maxlength="240" required></textarea>
+
+            <button type="submit">Publicar item</button>
+            <p class="form-message" id="product-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="form-card" id="cadastro-funcionario">
+          <p class="eyebrow">Fazer parte da equipe</p>
+          <h2>Adicionar colaborador</h2>
+          <form id="employee-form">
+            <label for="employee-name">Nome</label>
+            <input id="employee-name" name="name" type="text" maxlength="100" required>
+
+            <label for="employee-cpf">CPF</label>
+            <input id="employee-cpf" name="cpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14" required>
+
+            <label for="employee-email">E-mail</label>
+            <input id="employee-email" name="email" type="email" maxlength="120" placeholder="nome@exemplo.com" required>
+
+            <button type="submit">Incluir colaborador</button>
+            <p class="form-message" id="employee-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section product-admin-section" aria-labelledby="product-admin-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Controle do acervo</p>
+            <h2 id="product-admin-title">Itens publicados</h2>
+          </div>
+          <span class="item-count" id="product-admin-count" aria-live="polite"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="management-table">
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Controle</th>
+              </tr>
+            </thead>
+            <tbody id="product-admin-list"></tbody>
+          </table>
+          <p class="empty-state" id="product-admin-empty" hidden>Nenhum item publicado.</p>
+        </div>
+        <p class="form-message section-message" id="product-delete-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="section employee-section" aria-labelledby="employees-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Quadro de pessoas</p>
+            <h2 id="employees-title">Colaboradores</h2>
+          </div>
+          <span class="item-count" id="employee-count" aria-live="polite"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">CPF</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Controle</th>
+              </tr>
+            </thead>
+            <tbody id="employee-list"></tbody>
+          </table>
+          <p class="empty-state" id="employee-empty">O quadro de colaboradores está vazio.</p>
+        </div>
+        <p class="form-message section-message" id="employee-delete-message" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const apiUrl = "Cadastro.php";
+    const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+    const availableIllustrations = new Set([
+      "shirt", "mug", "notebook", "bottle", "tote", "case", "cap", "keyring", "calendar", "backpack", "package"
+    ]);
+    const apiMessage = document.getElementById("api-message");
+    let products = [];
+    let employees = [];
+
+    async function requestApi(method, payload = null, query = "") {
+      const options = { method, headers: {} };
+      if (payload !== null) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(payload);
+      }
+
+      const response = await fetch(query ? `${apiUrl}?${query}` : apiUrl, options);
+      let result;
+      try {
+        result = await response.json();
+      } catch (error) {
+        throw new Error("A resposta do servidor está inválida. Verifique a configuração do PHP.");
+      }
+      if (!response.ok) {
+        throw new Error(result.error || "Não foi possível concluir a operação.");
+      }
+      return result;
+    }
+
+    function showApiMessage(message, isError = false) {
+      apiMessage.textContent = message;
+      apiMessage.hidden = message === "";
+      apiMessage.classList.toggle("is-error", isError);
+    }
+
+    function makeIllustration(name) {
+      const illustrationName = availableIllustrations.has(name) ? name : "package";
+      const illustration = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      illustration.classList.add("product-illustration");
+      illustration.setAttribute("viewBox", "0 0 64 64");
+      illustration.setAttribute("aria-hidden", "true");
+      const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+      use.setAttribute("href", `#illustration-${illustrationName}`);
+      illustration.append(use);
+      return illustration;
+    }
+
+    function renderProducts() {
+      const list = document.getElementById("product-list");
+      const managementList = document.getElementById("product-admin-list");
+      list.replaceChildren();
+      managementList.replaceChildren();
+
+      products.forEach((product) => {
+        const illustrationName = availableIllustrations.has(product.illustration) ? product.illustration : "package";
+        const card = document.createElement("article");
+        card.className = "product-card";
+        const visual = document.createElement("div");
+        visual.className = `product-visual visual-${illustrationName}`;
+        visual.append(makeIllustration(illustrationName));
+        const title = document.createElement("h3");
+        title.textContent = product.name;
+        const description = document.createElement("p");
+        description.textContent = product.description;
+        const price = document.createElement("strong");
+        price.className = "product-price";
+        price.textContent = currency.format(Number(product.price));
+        card.append(visual, title, description, price);
+        list.append(card);
+
+        const row = document.createElement("tr");
+        const productCell = document.createElement("td");
+        const productInfo = document.createElement("div");
+        productInfo.className = "management-product";
+        const thumbnail = document.createElement("div");
+        thumbnail.className = `product-thumb visual-${illustrationName}`;
+        thumbnail.append(makeIllustration(illustrationName));
+        const details = document.createElement("div");
+        const managementName = document.createElement("strong");
+        managementName.textContent = product.name;
+        const managementDescription = document.createElement("span");
+        managementDescription.textContent = product.description;
+        details.append(managementName, managementDescription);
+        productInfo.append(thumbnail, details);
+        productCell.append(productInfo);
+        const priceCell = document.createElement("td");
+        priceCell.textContent = currency.format(Number(product.price));
+        const actionCell = document.createElement("td");
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-button";
+        removeButton.type = "button";
+        removeButton.textContent = "Excluir";
+        removeButton.dataset.productId = String(product.id);
+        removeButton.setAttribute("aria-label", `Excluir item: ${product.name}`);
+        actionCell.append(removeButton);
+        row.append(productCell, priceCell, actionCell);
+        managementList.append(row);
+      });
+
+      const productCount = products.length;
+      document.getElementById("product-count").textContent =
+        `${productCount} ${productCount === 1 ? "item" : "itens"}`;
+      document.getElementById("product-admin-count").textContent =
+        `${productCount} ${productCount === 1 ? "item" : "itens"}`;
+      document.getElementById("product-empty").hidden = productCount > 0;
+      document.getElementById("product-admin-empty").hidden = productCount > 0;
+    }
+
+    function renderEmployees() {
+      const list = document.getElementById("employee-list");
+      list.replaceChildren();
+      employees.forEach((employee) => {
+        const row = document.createElement("tr");
+        [employee.name, employee.cpf, employee.email].forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        });
+        const actionCell = document.createElement("td");
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-button";
+        removeButton.type = "button";
+        removeButton.textContent = "Excluir";
+        removeButton.dataset.employeeId = String(employee.id);
+        removeButton.setAttribute("aria-label", `Excluir colaborador: ${employee.name}`);
+        actionCell.append(removeButton);
+        row.append(actionCell);
+        list.append(row);
+      });
+      document.getElementById("employee-empty").hidden = employees.length > 0;
+      document.getElementById("employee-count").textContent =
+        `${employees.length} ${employees.length === 1 ? "colaborador" : "colaboradores"}`;
+    }
+
+    async function refreshData() {
+      const data = await requestApi("GET");
+      if (!Array.isArray(data.products) || !Array.isArray(data.employees)) {
+        throw new Error("O servidor retornou dados em um formato inválido.");
+      }
+      products = data.products;
+      employees = data.employees;
+      renderProducts();
+      renderEmployees();
+      showApiMessage("");
+    }
+
+    document.getElementById("product-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const message = document.getElementById("product-message");
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      try {
+        await requestApi("POST", {
+          type: "product",
+          name: data.get("name").trim(),
+          price: Number(data.get("price")),
+          description: data.get("description").trim()
+        });
+        form.reset();
+        message.textContent = "Item registrado com sucesso.";
+        await refreshData();
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    document.getElementById("employee-cpf").addEventListener("input", (event) => {
+      const digits = event.currentTarget.value.replace(/\D/g, "").slice(0, 11);
+      event.currentTarget.value = digits
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    });
+
+    document.getElementById("employee-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const message = document.getElementById("employee-message");
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      try {
+        await requestApi("POST", {
+          type: "employee",
+          name: data.get("name").trim(),
+          cpf: data.get("cpf"),
+          email: data.get("email").trim()
+        });
+        form.reset();
+        message.textContent = "Colaborador incluído na equipe.";
+        await refreshData();
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    document.getElementById("product-admin-list").addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-product-id]");
+      if (!button) return;
+      const product = products.find((item) => String(item.id) === button.dataset.productId);
+      if (!product || !window.confirm(`Confirmar a exclusão de "${product.name}"?`)) return;
+
+      const message = document.getElementById("product-delete-message");
+      button.disabled = true;
+      try {
+        await requestApi("DELETE", null, `type=product&id=${encodeURIComponent(product.id)}`);
+        await refreshData();
+        message.textContent = "Item retirado do acervo.";
+      } catch (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("employee-list").addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-employee-id]");
+      if (!button) return;
+      const employee = employees.find((item) => String(item.id) === button.dataset.employeeId);
+      if (!employee || !window.confirm(`Confirmar a exclusão de "${employee.name}" da equipe?`)) return;
+
+      const message = document.getElementById("employee-delete-message");
+      button.disabled = true;
+      try {
+        await requestApi("DELETE", null, `type=employee&id=${encodeURIComponent(employee.id)}`);
+        await refreshData();
+        message.textContent = "Colaborador removido da equipe.";
+      } catch (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+      }
+    });
+
+    const tabs = [
+      { button: document.getElementById("catalog-tab"), panel: document.getElementById("catalog-panel") },
+      { button: document.getElementById("registrations-tab"), panel: document.getElementById("registrations-panel") }
+    ];
+
+    function activateTab(activeTab, moveFocus) {
+      tabs.forEach(({ button, panel }) => {
+        const isActive = button === activeTab;
+        button.setAttribute("aria-selected", String(isActive));
+        button.tabIndex = isActive ? 0 : -1;
+        panel.hidden = !isActive;
+      });
+      if (moveFocus) activeTab.focus();
+    }
+
+    tabs.forEach(({ button }) => {
+      button.addEventListener("click", () => activateTab(button, false));
+      button.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        const currentIndex = tabs.findIndex((tab) => tab.button === button);
+        const nextIndex = (currentIndex + (event.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        activateTab(tabs[nextIndex].button, true);
+      });
+    });
+
+    document.getElementById("show-catalog").addEventListener("click", () => {
+      activateTab(document.getElementById("catalog-tab"), false);
+    });
+
+    refreshData().catch((error) => {
+      showApiMessage(
+        `${error.message} Execute o PHP com SQLite e use o endereço local descrito no README.`,
+        true
+      );
+    });
+  </script>
+</body>
+</html>
